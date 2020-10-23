@@ -1,0 +1,17 @@
+---
+title: "chem313_ICPMS_SoilLab"
+author: "Emily McLaughlin Sta. Maria"
+date: "10/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(readr)
+
+```
