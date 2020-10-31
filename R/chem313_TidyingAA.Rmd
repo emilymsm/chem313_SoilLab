@@ -1,0 +1,60 @@
+---
+title: "Untitled"
+author: "Emily McLaughlin Sta. Maria"
+date: "10/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(readr)
+library(janitor)
+
+```
+
+
+
+```{r}
+##importing data
+
+AA_Data <- read_csv("~/chem313/chem313_ICPMS_SoilLab/AA_Data.csv", skip = 4)
+View(AA_Data)
+
+sample_key <- read.csv("~/chem313/chem313_ICPMS_SoilLab/Sample_Key.csv", skip=0)
+
+View(sample_key)
+
+```
+
+
+```{r}
+
+##tidying data
+###renamed so that there was a common name to combine dataframes with
+###mutate was to make the column Sample.Key a characteristic, rather than number
+###full_join instead of merge because this avoids losing observations that have a lot of NA's
+
+AA_tidy <- AA_Data %>%
+  rename(Sample.Key = "Sample Key")
+
+sample_key_tidy <- sample_key %>%
+  mutate(Sample.Key = as.character(Sample.Key))
+
+AA_merged <- full_join(AA_tidy, sample_key_tidy)  %>%
+  drop_na("Mean Abs.")
+
+##clearing up environment
+
+rm(list=setdiff(ls(), "AA_merged"))
+
+##converting final dataframe into csv file
+
+write.csv(AA_merged, file = "~/chem313/chem313_ICPMS_SoilLab/R/chem313_TidyingAA.csv")
+
+
+```
