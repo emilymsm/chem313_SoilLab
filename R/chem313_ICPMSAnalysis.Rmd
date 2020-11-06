@@ -133,6 +133,28 @@ sample_analysis <- function(unique_site){
 
 ```
 
+```{r}
+
+#creates a function that runs a different function on each of the soil sample sites
+
+#inputs: a function
+#outputs: a data frame with the function outputs from each site
+
+run_sites <- function(Function){
+  value <- NULL
+  for(sites in sample_sites){
+    site_value <- Function(sites)
+    value <- rbind(site_value, value)
+  }
+  return(value)
+}
+
+```
+
+
+
+
+
 
 
 
