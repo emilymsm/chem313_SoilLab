@@ -78,7 +78,7 @@ remove(equation, cal, slope, slope_std, intercept, intercept_std, w, model, uniq
 sample_analysis <- function(unique_site){
   concentration_data <- NULL
   for(unique_metal in metals_analyzed){
-    sample <- filter(ICPMS_tidy_example, metals == unique_metal, site == unique_site)
+    sample <- filter(ICPMS_tidy_example, metal == unique_metal, site == unique_site)
     data <- NULL
     
     for(ID in sample$sample_key){
@@ -148,6 +148,23 @@ run_sites <- function(Function){
   }
   return(value)
 }
+
+```
+
+
+```{r}
+
+#analyze the method blank and all the samples
+#run_sites function made in previous chunk (may have to run again if this code isn't running)
+
+MB <- sample_analysis("MB")
+#ug/kg
+uncor_sample <- run_sites(sample_analysis)
+#values do not acconut for dilutions (ug/kg)
+
+MB
+uncor_sample
+
 
 ```
 
