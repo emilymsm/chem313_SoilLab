@@ -233,6 +233,14 @@ sample_data <- merge(ICPMS_tidy_example, sample_data_mb)%>% #adds important deta
 ```
 
 
+```{r, warning=FALSE}
+
+#cleaning up environment
+
+rm(list = ls()[!(ls() %in% c("ICPMS", "sample_data"))])
+
+```
+
 
 
 
