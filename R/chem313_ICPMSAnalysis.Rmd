@@ -1,0 +1,26 @@
+---
+title: "chem313_DataAnalysis"
+author: "Emily McLaughlin Sta. Maria"
+date: "11/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(readr)
+library(tidyverse)
+
+
+```
+
+```{r}
+
+
+
+```
+
+
