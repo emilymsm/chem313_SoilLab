@@ -30,4 +30,44 @@ metals_analyzed
 
 ```
 
+```{r}
+
+ICPMS_cal <- NULL
+for(unique_metal in metals_analyzed){
+  cal <- ICPMS_tidy_example %>%
+    filter(type == "Cal1" | type == "Cal2" | type == "Cal3") %>%
+    filter(metal == unique_metal) %>%
+    select(concentration, cps, rsd)
+  
+  w <- 1/(cal$cps*cal$rsd)^2
+  model <- lm(cal$cps ~ cal$concentration, weights = w)
+  
+  slope <- model$coefficients[2]
+  intercept <- model$coefficients[2]
+  slope_std <- summary(model)$coefficients[2,2]
+  intercept_std <- summary(model)$coefficients[1,2]
+  
+  plot(cal$cps ~ cal$concentration,
+       xlab = paste("Concentration of ", unique_metal, "(ppb)"),
+       ylab = "Counts per second") +
+    abline(model, col = "red") +
+    title(paste("Calibration for", unique_metal))
+  
+  equation <- tibble(metal = unique_metal, slope, slope_std, intercept, intercept_std)
+  ICPMS_cal <- rbind(ICPMS_cal, equation)
+}
+
+#units from standard solution prepared at OHSU (uq/L)
+
+ICPMS_cal
+
+remove(equation, cal, slope, slope_std, intercept, intercept_std, w, model, unique_metal)
+
+
+```
+
+
+
+
+
 
