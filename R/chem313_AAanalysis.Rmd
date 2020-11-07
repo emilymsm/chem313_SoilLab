@@ -1,0 +1,42 @@
+---
+title: "chem313_AAanalysis"
+author: "Emily McLaughlin Sta. Maria"
+date: "11/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+
+##don't forget to import tidy_AA.csv
+
+```
+
+```{r}
+
+#trying out that calibration curve
+
+cal <- tidy_AA %>%
+    filter(type == "CalStd" | type == "CalStd2" | type == "CalStd4") %>%
+    select(concentration, mean_abs)
+View(cal)
+
+#w <- 1/(cal$mean_abs * cal$rsd)^2
+model <- lm(cal$mean_abs ~ cal$concentration)
+
+
+plot(cal$mean_abs ~ cal$concentration,
+     xlab = "Concentrations of Cr (ppb)",
+     ylab = "Mean Absorbance") +
+  abline(model, col = "red") +
+  title("Calibration for Cr")
+
+
+
+
+```

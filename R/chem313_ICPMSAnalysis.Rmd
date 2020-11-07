@@ -229,6 +229,7 @@ sample_data <- merge(ICPMS_tidy_example, sample_data_mb)%>% #adds important deta
                          -conc_dil,
                          -conc_dil_error)
                   
+View(sample_data)
 
 ```
 
