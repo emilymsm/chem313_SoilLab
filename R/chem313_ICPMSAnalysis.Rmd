@@ -35,6 +35,8 @@ metals_analyzed
 #making calibration curve for each metal
 #ICPMS_cal is data frame for info from calibration curve equations
 
+#Rsd <- ICPMS_tidy_example$rsd/100
+
 ICPMS_cal <- NULL
 for(unique_metal in metals_analyzed){
   cal <- ICPMS_tidy_example %>%
@@ -42,7 +44,7 @@ for(unique_metal in metals_analyzed){
     filter(metal == unique_metal) %>%
     select(concentration, cps, rsd)
   
-  w <- 1/(cal$cps*cal$rsd)^2
+  w <- 1/(cal$cps*(cal$rsd/1000))^2
   model <- lm(cal$cps ~ cal$concentration, weights = w)
   
   slope <- model$coefficients[2]
@@ -96,7 +98,7 @@ sample_analysis <- function(unique_site){
       x <- (y-b)/m
       #units now kg/ml, based on calibration stadnards
       
-      RSD <- sample_data$rsd
+      RSD <- sample_data$rsd/1000
       CPS <- sample_data$cps
       
       #error propagation 
@@ -233,6 +235,8 @@ sample_data <- merge(ICPMS_tidy_example, sample_data_mb)%>% #adds important deta
                   
 View(sample_data)
 
+
+
 ```
 
 
@@ -241,6 +245,8 @@ View(sample_data)
 #cleaning up environment
 
 rm(list = ls()[!(ls() %in% c("ICPMS_tidy_example", "sample_data"))])
+
+write.csv(sample_data, file = "~/chem313/chem313_ICPMS_SoilLab/R/chem313_ICPMSAnalysis.csv")
 
 ```
 

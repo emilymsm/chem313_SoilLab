@@ -29,9 +29,9 @@ View(cal)
 model <- lm(cal$mean_abs ~ cal$concentration)
 
 plot(cal$mean_abs ~ cal$concentration,
-     xlab = "Concentrations of Cr (ppb)",
+     xlab = "Concentrations of Cr (ppm)",
      
-     #oh boy is this ppm
+     #oh boy is this ppm.
      
      ylab = "Mean Absorbance") +
   abline(model, col = "red") +
@@ -117,7 +117,7 @@ AA_D
 AA_E
 AA_F
 
-
+##units are ppm 
 
 
 
@@ -127,26 +127,75 @@ AA_F
 
 
 
-
-
-
-
-
 ```{r}
 
-##Time to fuck around for that concentration I guess
+##So I'm bringing sample_data from ICPMSAnalysis.Rmd into this one, so I can compare them, if I need t-tests or whatnot 
 
-Cr_conc <- (tidy_AA$mean_abs + 0.0019470)/0.0130130
-tidy_AA_conc <- cbind(tidy_AA, Cr_conc)
+##so upload chem313_ICPMSAnalysis.csv
 
-View(tidy_AA_conc)
+##Rn imma try to double filter but idk how haha
 
-##I'm suspicious... where's the blank... maybe I should look back at the ICPMS stuff... dilutions... idk
+Average_byMetalSite <- function(Site, Metal){
+  C <- ICPMS_data%>%
+  filter(site == Site, metal == Metal) 
+  #first site is column name, second Site is from function(Site)
+  mean(C$conc_blanked)
+  sd(C$conc_blanked)
+  CI <- qt(0.95, df=length(C$conc_blanked)-1)*sd(C$conc_blanked)/(sqrt(length(C$conc_blanked))) ##95% CI's... copy and paste when needed!
+ Conc_data <- data.frame(site=Site, metal=Metal, mean(C$conc_blanked), sd(C$conc_blanked), CI)
+}
+
+ICPMS_A_As75 <- Average_byMetalSite("A", "As75")
+ICPMS_A_Cd111 <- Average_byMetalSite("A", "Cd111")
+ICPMS_A_Cd114 <- Average_byMetalSite("A", "Cd114")
+ICPMS_A_Cr52 <- Average_byMetalSite("A", "Cr52")
+ICPMS_A_Cr53 <- Average_byMetalSite("A", "Cr53")
+ICPMS_A_Pb208 <- Average_byMetalSite("A", "Pb208")
+
+ICPMS_B_As75 <- Average_byMetalSite("B", "As75")
+ICPMS_B_Cd111 <- Average_byMetalSite("B", "Cd111")
+ICPMS_B_Cd114 <- Average_byMetalSite("B", "Cd114")
+ICPMS_B_Cr52 <- Average_byMetalSite("B", "Cr52")
+ICPMS_B_Cr53 <- Average_byMetalSite("B", "Cr53")
+ICPMS_B_Pb208 <- Average_byMetalSite("B", "Pb208")
+
+ICPMS_C_As75 <- Average_byMetalSite("C", "As75")
+ICPMS_C_Cd111 <- Average_byMetalSite("C", "Cd111")
+ICPMS_C_Cd114 <- Average_byMetalSite("C", "Cd114")
+ICPMS_C_Cr52 <- Average_byMetalSite("C", "Cr52")
+ICPMS_C_Cr53 <- Average_byMetalSite("C", "Cr53")
+ICPMS_C_Pb208 <- Average_byMetalSite("C", "Pb208")
+
+ICPMS_D_As75 <- Average_byMetalSite("D", "As75")
+ICPMS_D_Cd111 <- Average_byMetalSite("D", "Cd111")
+ICPMS_D_Cd114 <- Average_byMetalSite("D", "Cd114")
+ICPMS_D_Cr52 <- Average_byMetalSite("D", "Cr52")
+ICPMS_D_Cr53 <- Average_byMetalSite("D", "Cr53")
+ICPMS_D_Pb208 <- Average_byMetalSite("D", "Pb208")
+
+ICPMS_E_As75 <- Average_byMetalSite("E", "As75")
+ICPMS_E_Cd111 <- Average_byMetalSite("E", "Cd111")
+ICPMS_E_Cd114 <- Average_byMetalSite("E", "Cd114")
+ICPMS_E_Cr52 <- Average_byMetalSite("E", "Cr52")
+ICPMS_E_Cr53 <- Average_byMetalSite("E", "Cr53")
+ICPMS_E_Pb208 <- Average_byMetalSite("E", "Pb208")
+
+ICPMS_F_As75 <- Average_byMetalSite("F", "As75")
+ICPMS_F_Cd111 <- Average_byMetalSite("F", "Cd111")
+ICPMS_F_Cd114 <- Average_byMetalSite("F", "Cd114")
+ICPMS_F_Cr52 <- Average_byMetalSite("F", "Cr52")
+ICPMS_F_Cr53 <- Average_byMetalSite("F", "Cr53")
+ICPMS_F_Pb208 <- Average_byMetalSite("F", "Pb208")
 
 
-##Need column with concentrations, sites, and errors (among others, but those are key)
 
-##yes, uncertainty in {AA signal} = {AA signal}*RSD/100 (from Julie)
+SiteA <- c(ICPMS_A_As75, ICPMS_A_Cd111, ICPMS_A_Cd114, ICPMS_A_Cr52, ICPMS_A_Cr53, ICPMS_A_Pb208)
+SiteB <- c(ICPMS_B_As75, ICPMS_B_Cd111, ICPMS_B_Cd114, ICPMS_B_Cr52, ICPMS_B_Cr53, ICPMS_B_Pb208)
+SiteC <- c(ICPMS_C_As75, ICPMS_C_Cd111, ICPMS_C_Cd114, ICPMS_C_Cr52, ICPMS_C_Cr53, ICPMS_C_Pb208)
+SiteD <- c(ICPMS_D_As75, ICPMS_D_Cd111, ICPMS_D_Cd114, ICPMS_D_Cr52, ICPMS_D_Cr53, ICPMS_D_Pb208)
+SiteE <- c(ICPMS_E_As75, ICPMS_E_Cd111, ICPMS_E_Cd114, ICPMS_E_Cr52, ICPMS_E_Cr53, ICPMS_E_Pb208)
+SiteF <- c(ICPMS_F_As75, ICPMS_F_Cd111, ICPMS_F_Cd114, ICPMS_F_Cr52, ICPMS_F_Cr53, ICPMS_F_Pb208)
+
 
 
 ```
