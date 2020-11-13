@@ -9,4 +9,24 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
 
+##For AA analysis
+
+```
+
+
+```{r}
+
+cal <- tidy_AA %>%
+    filter(type == "CalStd" | type == "CalStd2" | type == "CalStd4") %>%
+    select(concentration, mean_abs)
+View(cal)
+#averaging means absorptions of calibration standards --> beginning to think I wasn't supposed to do this?
+cal_mean <- cal%>%
+  group_by(concentration) %>%
+    summarise(average = mean(mean_abs))
+cal_mean
+
+```
