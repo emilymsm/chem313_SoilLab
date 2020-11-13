@@ -139,10 +139,10 @@ Average_byMetalSite <- function(Site, Metal){
   C <- ICPMS_data%>%
   filter(site == Site, metal == Metal) 
   #first site is column name, second Site is from function(Site)
-  mean(C$conc_blanked)
-  sd(C$conc_blanked)
-  CI <- qt(0.95, df=length(C$conc_blanked)-1)*sd(C$conc_blanked)/(sqrt(length(C$conc_blanked))) ##95% CI's... copy and paste when needed!
- Conc_data <- data.frame(site=Site, metal=Metal, mean(C$conc_blanked), sd(C$conc_blanked), CI)
+  MEAN <- mean(C$conc_blanked/1000) ##dividing by 1000 to convert from ppb to ppm, to match AA data
+  SD <- sd(C$conc_blanked/1000)
+  CI <- qt(0.95, df=length(C$conc_blanked/1000)-1)*SD/(sqrt(length(C$conc_blanked/1000))) ##95% CI's... copy and paste when needed!
+ Conc_data <- data.frame(site=Site, metal=Metal, MEAN, SD, CI)
 }
 
 ICPMS_A_As75 <- Average_byMetalSite("A", "As75")
@@ -188,7 +188,6 @@ ICPMS_F_Cr53 <- Average_byMetalSite("F", "Cr53")
 ICPMS_F_Pb208 <- Average_byMetalSite("F", "Pb208")
 
 
-
 SiteA <- c(ICPMS_A_As75, ICPMS_A_Cd111, ICPMS_A_Cd114, ICPMS_A_Cr52, ICPMS_A_Cr53, ICPMS_A_Pb208)
 SiteB <- c(ICPMS_B_As75, ICPMS_B_Cd111, ICPMS_B_Cd114, ICPMS_B_Cr52, ICPMS_B_Cr53, ICPMS_B_Pb208)
 SiteC <- c(ICPMS_C_As75, ICPMS_C_Cd111, ICPMS_C_Cd114, ICPMS_C_Cr52, ICPMS_C_Cr53, ICPMS_C_Pb208)
@@ -196,7 +195,7 @@ SiteD <- c(ICPMS_D_As75, ICPMS_D_Cd111, ICPMS_D_Cd114, ICPMS_D_Cr52, ICPMS_D_Cr5
 SiteE <- c(ICPMS_E_As75, ICPMS_E_Cd111, ICPMS_E_Cd114, ICPMS_E_Cr52, ICPMS_E_Cr53, ICPMS_E_Pb208)
 SiteF <- c(ICPMS_F_As75, ICPMS_F_Cd111, ICPMS_F_Cd114, ICPMS_F_Cr52, ICPMS_F_Cr53, ICPMS_F_Pb208)
 
-
+##These values are now in ppm, like AA data
 
 ```
 
