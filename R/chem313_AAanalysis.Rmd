@@ -26,17 +26,129 @@ cal <- tidy_AA %>%
     select(concentration, mean_abs)
 View(cal)
 
-#w <- 1/(cal$mean_abs * cal$rsd)^2
 model <- lm(cal$mean_abs ~ cal$concentration)
-
 
 plot(cal$mean_abs ~ cal$concentration,
      xlab = "Concentrations of Cr (ppb)",
+     
+     #oh boy is this ppm
+     
      ylab = "Mean Absorbance") +
   abline(model, col = "red") +
   title("Calibration for Cr")
+
+summary(model)
+## abs = [(0.0130+/-0.0004)1/ppb] * [Cr in ppb] - 0.002+/-0.002
+##mean = 0.0130130
+##intercept = -0.0019470
+
+slope <- 0.0130130
+intercept <- -0.0019470
+slope_error <- 0.0004232
+intercept_error <- 0.0021581
+
+Cal_Curve_Eq <- data.frame(slope, intercept, slope_error, intercept_error)
+Cal_Curve_Eq
+```
+
+```{r}
+
+##method blank
+
+##MB in site is the blanks
+
+##in function(*here) type on input
+FixBlank <- function(Site){
+  A <- tidy_AA%>%
+  filter(site == Site) 
+  #first site is column name, second Site is from function(Site)
+  Cal_blank <- Cal_Curve_Eq
+  m_blank <- Cal_Curve_Eq$slope
+  b_blank <- Cal_Curve_Eq$intercept
+  y_blank <- A$mean_abs
+  x_blank <- (y_blank-b_blank)/m_blank #x_blank = uncorrect conc
+  corrected_blank <- x_blank*(A$total_volume/1000)
+  average <- mean(corrected_blank)
+  sd(corrected_blank)
+  blank_95CI <- qt(0.95, df=length(corrected_blank)-1)*sd(corrected_blank)/(sqrt(length(corrected_blank))) ##95% CI's... copy and paste when needed!
+  blank_data <- data.frame(site=Site, average, sd(corrected_blank), blank_95CI)
+}
+
+AA_MB <- FixBlank("MB")
+AA_QC <- FixBlank("QC")
+
+AA_QC
+  ##different with sites, need to account for mass of soil
+
+```
+
+```{r}
+
+##this is not blank stuff, despite all the blanks, it's just for the actual data collected... I think
+
+AA_samples <- function(Site){
+  A <- tidy_AA%>%
+  filter(site == Site) 
+  #first site is column name, second Site is from function(Site)
+  Cal_blank <- Cal_Curve_Eq
+  m_conc <- Cal_Curve_Eq$slope
+  b_conc <- Cal_Curve_Eq$intercept
+  y_conc <- A$mean_abs
+  x_conc <- (y_conc-b_conc)/(m_conc) 
+  corrected_conc <- x_conc*(A$total_volume/1000)/((A$mass_of_soil/1000))
+  maybe <- corrected_conc - AA_MB$average ##this is just the concentrations - blank = final real life concentration I guess theoretically
+  mean(maybe)
+  sd(maybe)
+  CI <- qt(0.95, df=length(maybe)-1)*sd(maybe)/(sqrt(length(maybe))) ##95% CI's... copy and paste when needed!
+ Conc_data <- data.frame(site=Site, mean(maybe), sd(maybe), CI)
+}
+
+AA_A <- AA_samples("A")
+AA_B <- AA_samples("B")
+AA_C <- AA_samples("C")
+AA_D <- AA_samples("D")
+AA_E <- AA_samples("E")
+AA_F <- AA_samples("F")
+
+AA_A
+AA_B
+AA_C
+AA_D
+AA_E
+AA_F
+
 
 
 
 
 ```
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+##Time to fuck around for that concentration I guess
+
+Cr_conc <- (tidy_AA$mean_abs + 0.0019470)/0.0130130
+tidy_AA_conc <- cbind(tidy_AA, Cr_conc)
+
+View(tidy_AA_conc)
+
+##I'm suspicious... where's the blank... maybe I should look back at the ICPMS stuff... dilutions... idk
+
+
+##Need column with concentrations, sites, and errors (among others, but those are key)
+
+##yes, uncertainty in {AA signal} = {AA signal}*RSD/100 (from Julie)
+
+
+```
+
+
