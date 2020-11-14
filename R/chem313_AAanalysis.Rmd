@@ -75,9 +75,8 @@ FixBlank <- function(Site){
 }
 
 AA_MB <- FixBlank("MB")
-AA_QC <- FixBlank("QC")
+#AA_QC <- FixBlank("QC") I think this should actually have the soil and blank corrections? So I'm adding to next chunk
 
-AA_QC
   ##different with sites, need to account for mass of soil
 
 ```
@@ -109,6 +108,7 @@ AA_C <- AA_samples("C")
 AA_D <- AA_samples("D")
 AA_E <- AA_samples("E")
 AA_F <- AA_samples("F")
+AA_QC <- AA_samples("QC")
 
 AA_A
 AA_B
@@ -116,7 +116,7 @@ AA_C
 AA_D
 AA_E
 AA_F
-
+AA_QC
 ##units are ppm 
 
 
@@ -187,6 +187,13 @@ ICPMS_F_Cr52 <- Average_byMetalSite("F", "Cr52")
 ICPMS_F_Cr53 <- Average_byMetalSite("F", "Cr53")
 ICPMS_F_Pb208 <- Average_byMetalSite("F", "Pb208")
 
+ICPMS_QC_As75 <- Average_byMetalSite("QC", "As75")
+ICPMS_QC_Cd111 <- Average_byMetalSite("QC", "Cd111")
+ICPMS_QC_Cd114 <- Average_byMetalSite("QC", "Cd114")
+ICPMS_QC_Cr52 <- Average_byMetalSite("QC", "Cr52")
+ICPMS_QC_Cr53 <- Average_byMetalSite("QC", "Cr53")
+ICPMS_QC_Pb208 <- Average_byMetalSite("QC", "Pb208")
+
 
 SiteA <- c(ICPMS_A_As75, ICPMS_A_Cd111, ICPMS_A_Cd114, ICPMS_A_Cr52, ICPMS_A_Cr53, ICPMS_A_Pb208)
 SiteB <- c(ICPMS_B_As75, ICPMS_B_Cd111, ICPMS_B_Cd114, ICPMS_B_Cr52, ICPMS_B_Cr53, ICPMS_B_Pb208)
@@ -194,6 +201,7 @@ SiteC <- c(ICPMS_C_As75, ICPMS_C_Cd111, ICPMS_C_Cd114, ICPMS_C_Cr52, ICPMS_C_Cr5
 SiteD <- c(ICPMS_D_As75, ICPMS_D_Cd111, ICPMS_D_Cd114, ICPMS_D_Cr52, ICPMS_D_Cr53, ICPMS_D_Pb208)
 SiteE <- c(ICPMS_E_As75, ICPMS_E_Cd111, ICPMS_E_Cd114, ICPMS_E_Cr52, ICPMS_E_Cr53, ICPMS_E_Pb208)
 SiteF <- c(ICPMS_F_As75, ICPMS_F_Cd111, ICPMS_F_Cd114, ICPMS_F_Cr52, ICPMS_F_Cr53, ICPMS_F_Pb208)
+SiteQC <- c(ICPMS_QC_As75, ICPMS_QC_Cd111, ICPMS_QC_Cd114, ICPMS_QC_Cr52, ICPMS_QC_Cr53, ICPMS_QC_Pb208)
 
 ##These values are now in ppm, like AA data
 
