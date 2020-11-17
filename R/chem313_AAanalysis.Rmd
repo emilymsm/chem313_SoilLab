@@ -19,6 +19,13 @@ library(tidyverse)
 
 ```{r}
 
+mean(ICPMS_tidy_example$rsd, na.rm=TRUE) 
+mean(tidy_AA$percent_rsd, na.rm=TRUE)
+
+```
+
+```{r}
+
 #trying out that calibration curve
 
 cal <- tidy_AA %>%
@@ -31,7 +38,7 @@ model <- lm(cal$mean_abs ~ cal$concentration)
 plot(cal$mean_abs ~ cal$concentration,
      xlab = "Concentrations of Cr (ppm)",
      
-     #oh boy is this ppm.
+     #oh boy is this ppm. It is.
      
      ylab = "Mean Absorbance") +
   abline(model, col = "red") +
@@ -83,7 +90,7 @@ AA_MB <- FixBlank("MB")
 
 ```{r}
 
-##this is not blank stuff, despite all the blanks, it's just for the actual data collected... I think
+##ppb 
 
 AA_samples <- function(Site){
   A <- tidy_AA%>%
@@ -102,13 +109,14 @@ AA_samples <- function(Site){
  Conc_data <- data.frame(site=Site, mean(maybe), sd(maybe), CI)
 }
 
-AA_A <- AA_samples("A")
-AA_B <- AA_samples("B")
-AA_C <- AA_samples("C")
-AA_D <- AA_samples("D")
-AA_E <- AA_samples("E")
-AA_F <- AA_samples("F")
-AA_QC <- AA_samples("QC")
+
+AA_A <- AA_samples_ppb("A")
+AA_B <- AA_samples_ppb("B")
+AA_C <- AA_samples_ppb("C")
+AA_D <- AA_samples_ppb("D")
+AA_E <- AA_samples_ppb("E")
+AA_F <- AA_samples_ppb("F")
+AA_QC <- AA_samples_ppb("QC")
 
 AA_A
 AA_B
@@ -122,6 +130,30 @@ AA_QC
 
 
 ```
+
+```{r}
+
+AA_samples <- function(Site){
+  A <- tidy_AA%>%
+  filter(site == Site) 
+  #first site is column name, second Site is from function(Site)
+  Cal_blank <- Cal_Curve_Eq
+  m_conc <- Cal_Curve_Eq$slope
+  b_conc <- Cal_Curve_Eq$intercept
+  y_conc <- A$mean_abs
+  x_conc <- (y_conc-b_conc)/(m_conc) 
+  corrected_conc <- x_conc*(A$total_volume/1000)/((A$mass_of_soil/1000))
+  maybe <- corrected_conc - AA_MB$average ##this is just the concentrations - blank = final real life concentration I guess theoretically
+  mean(maybe)
+  sd(maybe)
+  CI <- qt(0.95, df=length(maybe)-1)*sd(maybe)/(sqrt(length(maybe))) ##95% CI's... copy and paste when needed!
+ Conc_data <- data.frame(site=Site, mean(maybe), sd(maybe), CI)
+}
+
+```
+
+
+
 
 
 
@@ -142,7 +174,7 @@ Average_byMetalSite <- function(Site, Metal){
   MEAN <- mean(C$conc_blanked/1000) ##dividing by 1000 to convert from ppb to ppm, to match AA data
   SD <- sd(C$conc_blanked/1000)
   CI <- qt(0.95, df=length(C$conc_blanked/1000)-1)*SD/(sqrt(length(C$conc_blanked/1000))) ##95% CI's... copy and paste when needed!
- Conc_data <- data.frame(site=Site, metal=Metal, MEAN, SD, CI)
+ Conc_data <- data.frame(site = Site, metal = Metal, MEAN, SD, CI)
 }
 
 ICPMS_A_As75 <- Average_byMetalSite("A", "As75")
@@ -194,17 +226,139 @@ ICPMS_QC_Cr52 <- Average_byMetalSite("QC", "Cr52")
 ICPMS_QC_Cr53 <- Average_byMetalSite("QC", "Cr53")
 ICPMS_QC_Pb208 <- Average_byMetalSite("QC", "Pb208")
 
+ICPMS_QC_As75
+ICPMS_QC_Cd111
+ICPMS_QC_Cd114
+ICPMS_QC_Cr52
+ICPMS_QC_Cr53
+ICPMS_QC_Pb208
 
-SiteA <- c(ICPMS_A_As75, ICPMS_A_Cd111, ICPMS_A_Cd114, ICPMS_A_Cr52, ICPMS_A_Cr53, ICPMS_A_Pb208)
-SiteB <- c(ICPMS_B_As75, ICPMS_B_Cd111, ICPMS_B_Cd114, ICPMS_B_Cr52, ICPMS_B_Cr53, ICPMS_B_Pb208)
-SiteC <- c(ICPMS_C_As75, ICPMS_C_Cd111, ICPMS_C_Cd114, ICPMS_C_Cr52, ICPMS_C_Cr53, ICPMS_C_Pb208)
-SiteD <- c(ICPMS_D_As75, ICPMS_D_Cd111, ICPMS_D_Cd114, ICPMS_D_Cr52, ICPMS_D_Cr53, ICPMS_D_Pb208)
-SiteE <- c(ICPMS_E_As75, ICPMS_E_Cd111, ICPMS_E_Cd114, ICPMS_E_Cr52, ICPMS_E_Cr53, ICPMS_E_Pb208)
-SiteF <- c(ICPMS_F_As75, ICPMS_F_Cd111, ICPMS_F_Cd114, ICPMS_F_Cr52, ICPMS_F_Cr53, ICPMS_F_Pb208)
-SiteQC <- c(ICPMS_QC_As75, ICPMS_QC_Cd111, ICPMS_QC_Cd114, ICPMS_QC_Cr52, ICPMS_QC_Cr53, ICPMS_QC_Pb208)
+ICPMS_A_As75
+ICPMS_B_As75
+ICPMS_C_As75
+ICPMS_D_As75
+ICPMS_E_As75
+ICPMS_F_As75
+
+ICPMS_A_Cd111
+ICPMS_B_Cd111
+ICPMS_C_Cd111
+ICPMS_D_Cd111
+ICPMS_E_Cd111
+ICPMS_F_Cd111
+
+ICPMS_A_Cd114
+ICPMS_B_Cd114
+ICPMS_C_Cd114
+ICPMS_D_Cd114
+ICPMS_E_Cd114
+ICPMS_F_Cd114
+
+ICPMS_A_Cr52
+ICPMS_B_Cr52
+ICPMS_C_Cr52
+ICPMS_D_Cr52
+ICPMS_E_Cr52
+ICPMS_F_Cr52
+
+ICPMS_A_Cr53
+ICPMS_B_Cr53
+ICPMS_C_Cr53
+ICPMS_D_Cr53
+ICPMS_E_Cr53
+ICPMS_F_Cr53
+
+ICPMS_A_Pb208
+ICPMS_B_Pb208
+ICPMS_C_Pb208
+ICPMS_D_Pb208
+ICPMS_E_Pb208
+ICPMS_F_Pb208
+
+
 
 ##These values are now in ppm, like AA data
 
 ```
+
+```{r}
+
+##average of each metal
+
+As <- c(2.867858, 3.093917, 3.774724, 2.36024, 4.119131, 3.539387)
+Cd__111 <- c(0.1171607, 0.1376244, 0.1663066, 0.1383805, 0.1135686, 0.0843112)
+Cd__114 <- c(0.2490245, 0.2786682, 0.2978427, 0.2030614, 0.1401641, 0.09983913)
+Pb <- c(402.3014, 356.0249, 281.8168, 197.4917, 120.7364, 99.13809)
+ICr52 <- c(23.73373, 16.91288, 34.00937, 12.96789, 19.49183, 11.5554)
+ICr53 <- c(24.47262, 17.35234, 34.94743, 13.32203, 20.02948, 11.74731)
+ACr <- c(24.13822, 16.53601, 27.61849, 10.0536, 14.45528, 8.185134)
+
+sd(As)
+sd(Cd__111)
+sd(Cd__114)
+sd(Pb)
+sd(ICr52)
+sd(ICr53)
+sd(ACr)
+
+mean(As)
+qt(0.95, df=length((As)-1)*sd(As)/(sqrt(length(As))))
+mean(Cd__111)
+qt(0.95, df=length((Cd__111)-1)*sd(Cd__111)/(sqrt(length(Cd__111))))
+mean(Cd__114)
+qt(0.95, df=length((Cd__114)-1)*sd(Cd__114)/(sqrt(length(Cd__114))))
+mean(Pb)
+qt(0.95, df=length((Pb)-1)*sd(Pb)/(sqrt(length(Pb))))
+mean(ICr52)
+qt(0.95, df=length((ICr52)-1)*sd(ICr52)/(sqrt(length(ICr52))))
+mean(ICr53)
+qt(0.95, df=length((ICr53)-1)*sd(ICr53)/(sqrt(length(ICr53))))
+mean(ACr)
+qt(0.95, df=length((ACr)-1)*sd(ACr)/(sqrt(length(ACr))))
+
+```
+
+
+```{r}
+
+##Percent yield
+
+
+(2.378705/2.94)*100  #Cd-111
+(2.555016/2.94)*100 #Cd-114
+
+(57.83113/121.9)*100 #Cr-52
+(59.31501/121.9)*100 #Cr-53
+(49.5104/121.9)*100 #Cr (from AA)
+
+(1191.818/150)*100 #Pb208
+
+##Detection and quantification limit
+
+QC_abs <- c(0.0153, 0.0160, 0.0206, 0.0209, 0.0143, 0.0202, 0.0172, 0.0247, 0.0252, 0.0249, 0.0230, 0.0246)
+AA_slope_Cr <- 0.013013
+
+LOD <- 3*sd(QC_abs)/AA_slope_Cr
+LOQ <- 10*sd(QC_abs)/AA_slope_Cr
+
+LOD
+LOQ
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

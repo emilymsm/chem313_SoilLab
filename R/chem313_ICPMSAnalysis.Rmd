@@ -2,7 +2,9 @@
 title: "chem313_DataAnalysis"
 author: "Emily McLaughlin Sta. Maria"
 date: "11/6/2020"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
  
 ```{r setup, include=FALSE}
@@ -16,7 +18,8 @@ library(tidyverse)
 
 #Make sure to import ICPMS_tidy_example first
 
-
+mean(ICPMS_tidy_example$rsd, na.rm=TRUE) 
+mean(tidy_AA$percent_rsd, na.rm=TRUE)
 ```
 
 ```{r}
@@ -98,11 +101,11 @@ sample_analysis <- function(unique_site){
       x <- (y-b)/m
       #units now kg/ml, based on calibration stadnards
       
-      RSD <- sample_data$rsd/1000
+      RSD <- sample_data$rsd
       CPS <- sample_data$cps
       
       #error propagation 
-      e_yb <- sqrt((RSD)^2 + (b_e)^2)
+      e_yb <- sqrt(((RSD/100)*CPS)^2 + (b_e)^2)
       #error in y-b from the calibration
       yb <- CPS-b
       e_x <- x*sqrt((e_yb/yb)^2 + (m_e/m)^2)
