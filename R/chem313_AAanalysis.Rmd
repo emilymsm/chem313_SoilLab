@@ -348,6 +348,90 @@ LOQ
 ```
 
 
+```{r}
+
+sITE <- c("A", "B", "C", "D", "E", "F", "A", "B", "C", "D", "E", "F", "A", "B", "C", "D", "E", "F", "A", "B", "C", "D", "E", "F", "A", "B", "C", "D", "E", "F", "A", "B", "C", "D", "E", "F", "A", "B", "C", "D", "E", "F")
+cONC <- c(3, 3.1, 4, 2.2, 4, 4, 0.12, 0.14, 0.17, 0.14, 0.11, 0.08, 0.2, 0.3, 0.3, 0.2, 0.1, 0.1, 400, 400, 280, 200, 120, 100, 24, 17, 30, 13, 20, 10, 25, 17, 30, 13, 20, 10, 24, 17, 30, 10, 10, 8)
+
+Metal <- c("As-75", "As-75", "As-75", "As-75", "As-75", "As-75", "Cd-111", "Cd-111", "Cd-111", "Cd-111", "Cd-111", "Cd-111", "Cd-114", "Cd-114", "Cd-114", "Cd-114", "Cd-114", "Cd-114", "Pb-208", "Pb-208", "Pb-208", "Pb-208", "Pb-208", "Pb-208", "Cr-52", "Cr-52", "Cr-52", "Cr-52", "Cr-52", "Cr-52", "Cr-53", "Cr-53", "Cr-53", "Cr-53", "Cr-53", "Cr-53", "Cr", "Cr", "Cr", "Cr", "Cr", "Cr")
+
+cI <- c(1, 0.9, 1, 0.9, 8, 4, 0.02, 0.04, 0.04, 0.03, 0.04, 0.07, 0.1, 0.1, 0.1, 0.09, 0.1, 0.09, 400, 300, 50, 200, 20, 100, 9, 5, 20, 8, 40, 10, 9, 5, 20, 8, 40, 10 ,9, 5, 10, 6, 30, 9)
+
+Graph_data <- data.frame(sITE, cONC, Metal, cI)
+
+ggplot(data=Graph_data, aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Metal Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+
+ggplot(data=filter(Graph_data, Metal == "As-75"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("As-75 Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=filter(Graph_data, Metal == "Cd-111"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Cd-111 Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=filter(Graph_data, Metal == "Cd-114"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Cd-114 Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=filter(Graph_data, Metal == "Pb-208"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Pb-208 Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=filter(Graph_data, Metal == "Cr-52"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Cr-52 Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=filter(Graph_data, Metal == "Cr-53"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Cr-53 Concentration by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data=filter(Graph_data, Metal == "Cr"), aes(x=sITE, y=cONC, fill=Metal)) +
+  geom_bar(stat="identity", position=position_dodge()) + 
+  geom_errorbar(aes(ymin=cONC-cI, ymax=cONC+cI), width=0.2, position=position_dodge(0.9)) +
+  xlab("Site") +
+  ylab("Concentration (ppm)") +
+  ggtitle("Cr Concentration from AA by Site") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+#ggplot(data=filter(ICPMS_AllData_Av1, site != "QC"), aes(x=site, y=Concentation_of_Metal, fill =metal)) + scale_fill_manual(values=c("#FF4545", "#FFA245", "#FFE345", "#61FF45", "#45ADFF", "#A245FF")) + geom_bar(stat="identity", position=position_dodge()) + geom_errorbar(aes(ymin=Concentation_of_Metal-CI, ymax=Concentation_of_Metal+CI), width=.2, position=position_dodge(0.9)) + labs(y="Metal Concentration (mg/kg)", x="Site")
+
+
+```
+
+
 
 
 

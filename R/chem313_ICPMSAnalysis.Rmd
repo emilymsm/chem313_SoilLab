@@ -28,8 +28,7 @@ sample_sites <- unique(filter(ICPMS_tidy_example, site!="MB", site!="")$site)
   #excludes method blank and quality control 
 metals_analyzed <- unique(ICPMS_tidy_example$metal)
 
-sample_sites
-metals_analyzed
+
 
 ```
 
